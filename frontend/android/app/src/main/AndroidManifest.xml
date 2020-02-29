@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.google.android.gms.location.sample.basiclocationsample"
     package="com.awesomeproject">
 
     <uses-permission android:name="android.permission.INTERNET" />

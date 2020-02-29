@@ -8,59 +8,81 @@ import { View, Button, Text, Dimensions, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+const region = {
+    latitude: 51.4995933,
+    longitude: -0.1748108,
+    latitudeDelta: 0.000002,
+    longitudeDelta: 0.0021,
+};
+
+const marker = [{
+    latlng: {
+        latitude: 51.4995933,
+        longitude: -0.1748108,
+    },
+    title: "my location",
+    description: "description",
+    image: require('./assets/silver.png')
+}, {
+    latlng: {
+        latitude: 51.50,
+        longitude: -0.16,
+    },
+    title: "my location",
+    description: "description",
+    image: require('./assets/cherry.png')
+},{
+    latlng: {
+        latitude: 53.4995933,
+        longitude: -2.1748108,
+    },
+    title: "my location",
+    description: "description",
+    image: require('./assets/icon.png')
+}];
+
+function claimPoint(button) {
+    button.text = "Stop"
+}
 
 export class Map extends React.Component {
-        region = {
-            latitude: 51.4995933,
-            longitude: -0.1748108,
-            latitudeDelta: 0.000002,
-            longitudeDelta: 0.0021,
-        }
 
-        marker = [{
-            latlng: {
-                latitude: 51.4995933,
-                longitude: -0.1748108,
-            },
-            title: "my location",
-            description: "description",
-            image: require('./assets/test.png')
-        }, {
-            latlng: {
-                latitude: 51.4995933,
-                longitude: -0.1748108,
-            },
-            title: "my location",
-            description: "description",
-            image: require('./assets/icon.png')
-        },{
-            latlng: {
-                latitude: 53.4995933,
-                longitude: -2.1748108,
-            },
-            title: "my location",
-            description: "description",
-            image: require('./assets/icon.png')
-        }]
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: "yum",
+            region: props.region,
+            marker: props.marker,
+            swap: true
+        }
+    }
+
+
+    changePic() {
+        if (this.state.swap) {
+            this.state.marker[0].image = require('./assets/banana.png');
+            this.state.swap = false
+        } else {
+            this.state.marker[0].image = require('./assets/cherry.png');
+            this.state.swap = true
+        }
+    }
 
 
   render() {
     return (
         <View style={styles.container}>
           <MapView style={styles.mapStyle}
-                   initialRegion={{
-                     latitude: 51.4978923,
-                     longitude: -0.17212,
-                     latitudeDelta: 0.015,
-                     longitudeDelta: 0.015
-                   }}>
-            <MapView.Marker
-                image={this.marker[0].image}
-                coordinate={this.marker[0].latlng}/>
-            <MapView.Marker
-                image={this.marker[2].image}
-                coordinate={this.marker[2].latlng}/>
+                   initialRegion={this.state.region}>
+                  {this.state.marker.map(mark => <MapView.Marker
+                      image={mark.image}
+                      coordinate={mark.latlng}/>)}
         </MapView>
+            <Button
+                title={this.state.title}
+                onPress={() => {this.setState({title: "pisnefe"});
+                this.changePic()}}
+            />
         </View>
     );
   }
@@ -86,7 +108,6 @@ function OtherScreen() {
   return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Other screen</Text>
-
       </View>
   );
 }
@@ -94,10 +115,7 @@ function OtherScreen() {
 function MapScreen() {
   return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Map/>
-        <Button
-            title="Claim Checkpoint!"
-        />
+        <Map marker={marker} region = {region}/>
       </View>
   );
 }
