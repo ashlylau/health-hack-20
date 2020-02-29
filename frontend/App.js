@@ -47,7 +47,6 @@ function MapScreen() {
 
 const Stack = createStackNavigator();
 
-
 function App() {
   return (
     <NavigationContainer>
