@@ -46,8 +46,7 @@ function MapScreen() {
 }
 
 const Stack = createStackNavigator();
-// load local .html file
-const PolicyHTML = require('./map_view.html');
+
 
 function App() {
   return (
