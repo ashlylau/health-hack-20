@@ -1,21 +1,57 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import ReactDOM from 'react-dom';
 import { View, Button, Text, Dimensions, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import image from './assets/cherry.svg';
 
 export class Map extends React.Component {
+  state = {
+    region: {
+      latitude: 51.4995933,
+      longitude: -0.1748108,
+      latitudeDelta: 0.000002,
+      longitudeDelta: 0.0021,
+    },
+    marker: [{
+      latlng: {
+        latitude: 51.4995933,
+        longitude: -0.1748108,
+      },
+      title: "my location",
+      description: "description",
+      image: 'snake.png'
+    }]
+  };
+
+  // onRegionChange(region) {
+  //   this.setState({ region });
+  // }
   render() {
     return (
       <View style={styles.container}>
-        <MapView style={styles.mapStyle} />
+        <MapView style={styles.mapStyle}
+        region={this.state.region}
+        // onRegionChange={this.onRegionChange}>
+        >
+          {this.state.marker.map(marker => (
+            <MapView.Marker
+              coordinate={marker.latlng}
+              title={marker.title}
+              description={marker.description}
+              image={image}
+              pinColor='blue'
+            />
+          ))}
+          </MapView>
       </View>
     );
   }
 }
+
 
 function HomeScreen({ navigation }) {
   return (
