@@ -9,6 +9,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.awesomeproject.generated.BasePackageList;
+import com.airbnb.android.react.maps.MapsPackage;
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
@@ -32,6 +33,14 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+       return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new MapsPackage()
+       );
     }
 
     @Override
