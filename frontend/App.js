@@ -7,6 +7,9 @@ import MapView from 'react-native-maps';
 import { View, Button, Text, Dimensions, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as Alert from "react-native-web";
+
+var PLAYER_SCORE = 0;
 
 const region = {
     latitude: 51.4995933,
@@ -17,32 +20,91 @@ const region = {
 
 const marker = [{
     latlng: {
-        latitude: 51.4995933,
-        longitude: -0.1748108,
+        latitude: 51.499842,
+        longitude: -0.1737106,
     },
+    latitude: 51.499842,
+    longitude: -0.1737106,
     title: "my location",
     description: "description",
     image: require('./assets/silver.png')
 }, {
     latlng: {
-        latitude: 51.50,
-        longitude: -0.16,
+        latitude: 51.4999775,
+        longitude: -0.1722874,
     },
+    latitude: 51.4999775,
+    longitude: -0.1722874,
     title: "my location",
     description: "description",
     image: require('./assets/cherry.png')
 },{
     latlng: {
-        latitude: 53.4995933,
-        longitude: -2.1748108,
+        latitude: 51.4987904,
+        longitude: -0.1722485,
     },
+    latitude: 51.4987904,
+    longitude: -0.1722485,
     title: "my location",
     description: "description",
-    image: require('./assets/icon.png')
-}];
+    image: require('./assets/banana.png')
+},{
+    latlng: {
+        latitude: 51.498563,
+        longitude: -0.1733593,
+    },
+    latitude: 51.498563,
+    longitude: -0.1733593,
+    title: "my location",
+    description: "description",
+    image: require('./assets/gold.png')},{
+    latlng: {
+        latitude: 51.4832084,
+        longitude: -0.2045351,
+    },
+    latitude: 51.4832084,
+    longitude: -0.2045351,
+    title: "my location",
+    description: "description",
+    image: require('./assets/snake.png')},{
+    latlng: {
+        latitude: 51.4979749,
+        longitude: -0.1764943,
+    },
+    latitude: 51.4979749,
+    longitude: -0.1764943,
+    title: "my location",
+    description: "description",
+    image: require('./assets/apple.png')}
+    ];
 
-function claimPoint(button) {
-    button.text = "Stop"
+function dist(x1, y1, x2, y2) {
+    return (x1  - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+}
+
+export class Home extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            navigation: this.props.nav
+        }
+    }
+
+    render() {
+        return(
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{fontSize: 40}}>Welcome back</Text>
+                <Text style={{fontSize: 40}}>Jason</Text>
+                <Text style={{padding: 20}}/>
+                <Button
+                    color={"green"}
+                    title={"Points earned today: " + PLAYER_SCORE.toString()}
+                    onPress={() => navigation.navigate('Map')}
+                />
+            </View>
+        );
+    }
 }
 
 export class Map extends React.Component {
@@ -50,12 +112,40 @@ export class Map extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: "yum",
+            title: "Claim!",
             region: props.region,
             marker: props.marker,
-            swap: true
+            swap: true,
+            x: "Unknown",
+            y: "Unknown",
+            claims: ""
         }
     }
+
+    claimF() {
+        var fail = true;
+        for (var i = 0; i < this.state.marker.length ; i++) {
+            if (dist(this.state.x, this.state.y, this.state.marker[i].longitude, this.state.marker[i].latitude) < 0.0000015) {
+                this.setState({claims: "Congrats! You earned 10 points!"});
+                this.setState({marker: this.state.marker.filter(mark => this.state.marker[i] !== mark)});
+                fail = false;
+                PLAYER_SCORE = PLAYER_SCORE +  10;
+            }
+        }
+        if (fail) {
+            this.setState({claims: "No joy!"});
+        }
+    };
+
+    findCoordinates = () => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({ x: position.coords.longitude, y: position.coords.latitude });
+            },
+            error => Alert.alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+    };
 
 
     changePic() {
@@ -66,11 +156,13 @@ export class Map extends React.Component {
             this.state.marker[0].image = require('./assets/cherry.png');
             this.state.swap = true
         }
+        this.findCoordinates();
+        this.claimF();
     }
 
 
   render() {
-    return (
+      return (
         <View style={styles.container}>
           <MapView style={styles.mapStyle}
                    initialRegion={this.state.region}>
@@ -80,9 +172,9 @@ export class Map extends React.Component {
         </MapView>
             <Button
                 title={this.state.title}
-                onPress={() => {this.setState({title: "pisnefe"});
-                this.changePic()}}
+                onPress={() => {this.changePic();}}
             />
+            <Text>{this.state.claims}</Text>
         </View>
     );
   }
@@ -91,14 +183,7 @@ export class Map extends React.Component {
 function HomeScreen({ navigation }) {
   return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{fontSize: 40}}>Welcome back</Text>
-        <Text style={{fontSize: 40}}>Jason</Text>
-        <Text style={{padding: 20}}/>
-        <Button
-            color={"green"}
-            title="Points earned today: 283"
-            onPress={() => navigation.navigate('Map')}
-        />
+          <Home nav = {navigation}/>
       </View>
   );
 }
