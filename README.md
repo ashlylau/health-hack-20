@@ -5,6 +5,8 @@ Inspired by 80s nostalgia, we decided to bring the game of snake into real life 
 
 SnakeRun allows you to play a real life, multiplayer game of snake. The game drops random checkpoints around your location, and you can run/walk to the location to claim the points. Compete with friends on the leaderboard, and exchange points for vouchers to buy healthy food.
 
+## [Slides](https://docs.google.com/presentation/d/1CAxdkgBQaT7TU68sv8DyiL1Lb2KcI0PMdYguCJVJGzc/edit?usp=sharing)
+
 ## Tech stack
 React Native, Google Maps API, Express.js
 
