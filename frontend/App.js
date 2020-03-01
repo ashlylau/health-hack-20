@@ -5,6 +5,7 @@
 import * as React from 'react';
 import MapView from 'react-native-maps';
 import { View, Button, Text, Dimensions, StyleSheet } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as Alert from "react-native-web";
@@ -106,6 +107,34 @@ export class Home extends React.Component {
         );
     }
 }
+
+export class ExampleOne extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            tableHead: ['Player', 'Score'],
+            tableData: [
+                ['Bob', '2354'],
+                ['Amy', '322'],
+                ['Joe', '301'],
+                ['Ray', '14']
+            ]
+        }
+    }
+
+    render() {
+        const state = this.state;
+        return (
+            <View style={tableStyle.container}>
+                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                    <Row data={state.tableHead} style={tableStyle.head} textStyle={tableStyle.text}/>
+                    <Rows data={state.tableData} textStyle={tableStyle.text}/>
+                </Table>
+            </View>
+        )
+    }
+}
+
 
 export class Map extends React.Component {
 
@@ -212,12 +241,18 @@ function App() {
       <NavigationContainer>
         <Tabs.Navigator initialRouteName="Home">
           <Tabs.Screen name="Home" component={HomeScreen} />
-          <Tabs.Screen name="Scores" component={OtherScreen} />
+          <Tabs.Screen name="Scores" component={ExampleOne} />
           <Tabs.Screen name="Map" component={MapScreen} />
         </Tabs.Navigator>
       </NavigationContainer>
   );
 }
+
+const tableStyle = StyleSheet.create({
+    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+    head: { height: 40, backgroundColor: '#f1f8ff' },
+    text: { margin: 6 }
+});
 
 const styles = StyleSheet.create({
   container: {
