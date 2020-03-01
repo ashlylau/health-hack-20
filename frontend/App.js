@@ -137,19 +137,22 @@ export class ExampleOne extends React.Component {
 
 
 export class Map extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: "Claim!",
-            region: props.region,
-            marker: props.marker,
-            swap: true,
-            x: "Unknown",
-            y: "Unknown",
-            claims: ""
-        }
-    }
+  componentDidMount() {
+    window.setInterval(this.findCoordinates, 100);
+  }
+  
+  constructor(props) {
+      super(props);
+      this.state = {
+          title: "Claim!",
+          region: props.region,
+          marker: props.marker,
+          swap: true,
+          x: "Unknown",
+          y: "Unknown",
+          claims: ""
+      }
+  }
 
     claimF() {
         var fail = true;
@@ -169,8 +172,9 @@ export class Map extends React.Component {
     findCoordinates = () => {
         navigator.geolocation.getCurrentPosition(
             position => {
-                this.setState({ x: position.coords.longitude, y: position.coords.latitude });
-            },
+                this.setState({ x: position.coords.longitude, y: position.coords.latitude });                
+                console.log(this.state.x);
+              },
             error => Alert.alert(error.message),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
         );
